@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/api_services.dart';
 import 'place_details_screen.dart';
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Home")),
-      body: const Center(child: Text("Welcome to TripSol!")),
-    );
-  }
-}
+import 'saved_trips_page.dart';
+import 'package:tripsol_clean/screens/profile_page.dart';
+import '../widgets/place_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,8 +13,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
   List<Place> _recommendations = [];
   bool _isLoading = true;
+
+  final List<Place> _popularPlaces = [
+    Place(
+      title: 'Manali',
+      description: 'Himalayan getaway for snow and mountains',
+      imageUrl: 'https://www.india.com/wp-content/uploads/2019/11/Manali.png',
+    ),
+    Place(
+      title: 'Pondicherry',
+      description: 'French colonial vibes by the sea',
+      imageUrl:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Pondicherry-Rock_beach_aerial_view.jpg/1200px-Pondicherry-Rock_beach_aerial_view.jpg',
+    ),
+    Place(
+      title: 'Leh-Ladakh',
+      description: 'Stunning high-altitude landscapes',
+      imageUrl:
+          'https://images.unsplash.com/photo-1606857090627-27ca46667290?fm=jpg',
+    ),
+  ];
 
   @override
   void initState() {
@@ -44,9 +56,117 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Widget buildHomeContent() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView(
+        children: [
+          const Text(
+            'Where to next, Hasini?',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Search destinations...',
+              prefixIcon: const Icon(Icons.search),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Recommended for You',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SizedBox(
+                  height: 220,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _recommendations.length,
+                    itemBuilder: (context, index) {
+                      final place = _recommendations[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: PlaceCard(
+                          title: place.title,
+                          description: place.description,
+                          imageUrl: place.imageUrl,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PlaceDetailsPage(placeName: place.title),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+          const SizedBox(height: 20),
+          const Text(
+            'Popular Now',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 220,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _popularPlaces.length,
+              itemBuilder: (context, index) {
+                final place = _popularPlaces[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: PlaceCard(
+                    title: place.title,
+                    description: place.description,
+                    imageUrl: place.imageUrl,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PlaceDetailsPage(placeName: place.title),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      buildHomeContent(),
+      const SavedTripsPage(),
+      const ProfilePage(
+        userEmail: "hasini@gmail.com",
+        savedTripsCount: 2, // mock value
+      ),
+    ];
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("TripSol"),
+        backgroundColor: Colors.teal,
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -57,14 +177,6 @@ class _HomePageState extends State<HomePage> {
                 'TripSol Menu',
                 style: TextStyle(color: Colors.white, fontSize: 22),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.pushNamed(context, '/profile');
-              },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
@@ -85,80 +197,17 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-
       backgroundColor: const Color(0xFFF8FDFD),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'TripSol\nWhere to next, Hasini?',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search destinations...',
-                  prefixIcon: const Icon(Icons.search),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Recommended for You',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      height: 120,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _recommendations.length,
-                        itemBuilder: (context, index) {
-                          final place = _recommendations[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      PlaceDetailsPage(placeName: place.title),
-                                ),
-                              );
-                            },
-
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              padding: const EdgeInsets.all(8),
-                              width: 140,
-                              decoration: BoxDecoration(
-                                color: Colors.teal.shade100,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  place.title,
-                                  style: const TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-            ],
-          ),
-        ),
+      body: SafeArea(child: pages[_currentIndex]),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: Colors.teal,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: 'Saved'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
       ),
     );
   }

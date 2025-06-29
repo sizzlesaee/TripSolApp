@@ -19,7 +19,7 @@ class AboutAppPage extends StatelessWidget {
             SizedBox(height: 20),
             Text(
               "TripSol helps you discover destinations, plan customized itineraries, "
-              "and save your favorite trips. Built with Flutter and love, "
+              "and save your favorite trips. Built with Flutter, "
               "our goal is to make travel planning easier, smarter, and more personalized.",
               style: TextStyle(fontSize: 16),
             ),
@@ -34,7 +34,7 @@ class AboutAppPage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "📅 IIT Indore Project - June–July 2025",
+              "📅 IIT Indore SOC Project - June–July 2025",
               style: TextStyle(fontSize: 15),
             ),
           ],

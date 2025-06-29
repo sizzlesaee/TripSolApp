@@ -1,99 +1,60 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:5000'; // For emulator use
-  static const String apiKey = 'TEST_API_KEY';
-
+  // ✅ Get Trip Plan – MOCKED (Fast Response)
   static Future<Map<String, dynamic>> getTripPlan(String place) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/tripplan/$place'),
-        headers: {'Authorization': 'Bearer $apiKey'},
-      );
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load trip plan');
-      }
-    } catch (e) {
-      print('API error: $e');
-      return {
-        'plan': [
-          {
-            'day': 1,
-            'activities': ['City Palace', 'Lake Pichola'],
-          },
-          {
-            'day': 2,
-            'activities': ['Fateh Sagar', 'Saheliyon ki Bari'],
-          },
-          {
-            'day': 3,
-            'activities': ['Shopping', 'Local food tour'],
-          },
-        ],
-        'total_budget': 4000,
-        'travel_mode': 'Train',
-      };
-    }
-  }
-
-  static Future<void> saveItinerary(Map<String, dynamic> itinerary) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/saveItinerary'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $apiKey',
+    await Future.delayed(const Duration(seconds: 1));
+    return {
+      'plan': [
+        {
+          'day': 1,
+          'activities': ['Assi Ghat', 'Kashi Vishwanath Temple'],
         },
-        body: json.encode(itinerary),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to save itinerary');
-      }
-    } catch (e) {
-      print('Mock save error: $e');
-    }
+        {
+          'day': 2,
+          'activities': ['Dashashwamedh Ghat', 'Ganga Aarti'],
+        },
+        {
+          'day': 3,
+          'activities': ['Local Food Tour', 'Banarasi Shopping'],
+        },
+      ],
+      'total_budget': 5000,
+      'travel_mode': 'Train',
+    };
   }
 
+  // ✅ Save Itinerary – MOCKED
+  static Future<void> saveItinerary(Map<String, dynamic> itinerary) async {
+    await Future.delayed(const Duration(milliseconds: 800));
+    print("Trip saved successfully (mock).");
+  }
+
+  // ✅ Recommended Places – MOCKED
   static Future<List<Place>> getRecommendedPlaces() async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/recommendations'),
-        headers: {'Authorization': 'Bearer $apiKey'},
-      );
-      if (response.statusCode == 200) {
-        final List data = json.decode(response.body);
-        return data.map((item) => Place.fromJson(item)).toList();
-      } else {
-        throw Exception('Failed to load recommendations');
-      }
-    } catch (e) {
-      print('Error fetching recommendations: $e');
-      return [
-        Place(
-          title: 'Udaipur',
-          description: 'The City of Lakes',
-          imageUrl: 'https://example.com/udaipur.jpg',
-        ),
-        Place(
-          title: 'Goa',
-          description: 'Beaches, parties, and seafood',
-          imageUrl:
-              'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-        ),
-        Place(
-          title: 'Varanasi',
-          description: 'Spiritual ghats on the Ganges',
-          imageUrl:
-              'https://images.unsplash.com/photo-1588244646683-6e4f77b2b6d1',
-        ),
-      ];
-    }
+    await Future.delayed(const Duration(milliseconds: 800));
+    return [
+      Place(
+        title: 'Udaipur',
+        description: 'City of Lakes with palaces & boat rides',
+        imageUrl:
+            'https://www.thepinkcityholidays.com/wp-content/uploads/2023/09/Udaipur-Tour-For-5-Days.jpg',
+      ),
+      Place(
+        title: 'Goa',
+        description: 'Beaches, parties, seafood & forts',
+        imageUrl:
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+      ),
+      Place(
+        title: 'Varanasi',
+        description: 'Ghats, temples, and spiritual vibes',
+        imageUrl: 'https://wallpaperaccess.com/full/4459853.jpg',
+      ),
+    ];
   }
 
+  // ✅ Customize Trip – MOCKED
   static Future<Map<String, dynamic>> customizeTripPlan(
     Map<String, dynamic> customizationData,
   ) async {
@@ -102,15 +63,11 @@ class ApiService {
       "plan": [
         {
           "day": 1,
-          "activities": ["City Palace", "Lake Pichola"],
+          "activities": ["Custom Place 1", "Custom Place 2"],
         },
         {
           "day": 2,
-          "activities": ["Fateh Sagar Lake", "Saheliyon Ki Bari"],
-        },
-        {
-          "day": 3,
-          "activities": ["Shopping", "Boat Ride"],
+          "activities": ["Custom Place 3", "Custom Place 4"],
         },
       ],
       "total_budget": customizationData['budget'],
@@ -120,25 +77,17 @@ class ApiService {
     };
   }
 
+  // ✅ Delete Trip – MOCKED
   static Future<void> deleteTrip(String place, String user) async {
-    final response = await http.delete(
-      Uri.parse('$baseUrl/deleteItinerary'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
-      },
-      body: json.encode({'place': place, 'user': user}),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete itinerary');
-    }
+    await Future.delayed(const Duration(milliseconds: 500));
+    print("Deleted trip for $place by $user (mock)");
   }
 
+  // ✅ Get Saved Trips – MOCKED
   static Future<List<Map<String, dynamic>>> getSavedTrips(
     String userEmail,
   ) async {
-    await Future.delayed(const Duration(seconds: 1)); // simulate loading
+    await Future.delayed(const Duration(milliseconds: 700));
     return [
       {
         "place": "Udaipur",
@@ -168,7 +117,7 @@ class ApiService {
           },
           {
             "day": 2,
-            "activities": ["Fort Agauda", "Arambol Beach"],
+            "activities": ["Fort Aguada", "Calangute Market"],
           },
         ],
         "total_budget": 8500,
@@ -180,6 +129,7 @@ class ApiService {
   }
 }
 
+// ✅ Simple Place Model
 class Place {
   final String title;
   final String description;

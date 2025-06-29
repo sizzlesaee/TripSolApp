@@ -25,7 +25,7 @@ class TripSolApp extends StatelessWidget {
         fontFamily: 'Roboto',
         useMaterial3: true,
       ),
-      initialRoute: '/home',
+      initialRoute: '/',
       routes: {
         '/': (context) => const IntroPage(),
         '/login': (context) => const LoginScreen(),
@@ -35,6 +35,7 @@ class TripSolApp extends StatelessWidget {
           userEmail: "hasini@gmail.com", // mock
           savedTripsCount: 2, // mock
         ),
+        '/saved': (context) => const SavedTripsPage(),
         '/settings': (context) => const SettingsPage(),
         '/about': (context) => const AboutAppPage(),
         '/saved-trips': (context) => const SavedTripsPage(),

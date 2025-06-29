@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tripsol_clean/screens/login_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
@@ -37,11 +38,11 @@ class IntroPage extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     Text(
-                      "Trip Sol",
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.2,
+                      "TripSol",
+                      style: GoogleFonts.pacifico(
+                        fontSize: 48,
+                        color: Colors.teal[800],
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'PlaywriteUSModern',
                       ),
                     ),
 
@@ -54,9 +55,11 @@ class IntroPage extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           "Dream. Plan. Explore",
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.055,
-                            fontFamily: "ArchitectsDaughter",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            color: Colors.grey[800],
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                       ],
